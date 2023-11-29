@@ -1,35 +1,31 @@
-import lombok.AllArgsConstructor;
-
-public class Room {
-
-    private int roomNumber;
+class Room {
+    private int number;
+    private RoomStatus status;
     private double price;
-    private String status;
 
-    public Room(int roomNumber, double price, String status) {
-        this.roomNumber = roomNumber;
-        this.price = price;
+    public Room(int number, RoomStatus status, double price) {
+        this.number = number;
         this.status = status;
+        this.price = price;
     }
 
-    public int getRoomNumber() {
-        return roomNumber;
+    public int getNumber() {
+        return number;
+    }
+
+    public RoomStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RoomStatus status) {
+        this.status = status;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public void setPrice(double price) {
         this.price = price;
     }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
 }

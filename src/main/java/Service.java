@@ -1,16 +1,14 @@
-public class Service {
-
-    // название услуги
-    private String serviceName;
+class Service {
+    private String name;
     private double price;
 
-    public Service(String serviceName, double price) {
-        this.serviceName = serviceName;
+    public Service(String name, double price) {
+        this.name = name;
         this.price = price;
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public String getName() {
+        return name;
     }
 
     public double getPrice() {
