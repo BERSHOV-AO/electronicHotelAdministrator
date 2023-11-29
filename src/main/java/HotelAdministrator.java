@@ -23,7 +23,7 @@ class HotelAdministrator {
         Room room = findRoom(roomNumber);
         if (room != null && room.getStatus() == RoomStatus.FREE) {
             room.setStatus(RoomStatus.OCCUPIED);
-            System.out.println("Гость успешно заселился в номер " + roomNumber);
+            System.out.println("Гость успешно заселился в комнату " + roomNumber);
         } else {
             System.out.println("Комната " + roomNumber + " недоступна для регистрации");
         }
