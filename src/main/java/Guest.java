@@ -1,5 +1,8 @@
 import java.util.Date;
 
+/**
+ * подумать над датой выезда
+ */
 public class Guest {
     private String name;
     private int roomNumber;
@@ -29,4 +32,13 @@ public class Guest {
         return checkOutDate;
     }
 
+    @Override
+    public String toString() {
+        return "Guest{" +
+                "name='" + name + '\'' +
+                ", roomNumber=" + roomNumber +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                '}';
+    }
 }

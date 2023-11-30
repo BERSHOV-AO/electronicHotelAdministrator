@@ -1,11 +1,8 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 class HotelAdministrator {
     private List<HotelRoom> rooms;
     private List<Service> services;
-
     private List<Guest> guests;
 
     public HotelAdministrator() {
@@ -32,7 +29,7 @@ class HotelAdministrator {
         guests.add(guest);
 
         HotelRoom room = findRoomByNumber(roomNumber);
-        if(room != null) {
+        if (room != null) {
             room.setStatus(RoomStatus.OCCUPIED);
         }
     }
@@ -110,9 +107,81 @@ class HotelAdministrator {
     public void addRoom(int roomNumber, int stars, double price, int capacity) {
         HotelRoom room = new HotelRoom(roomNumber, stars, price, capacity);
         rooms.add(room);
-
     }
 
+    public void addService(String serviceName, double price) {
+        Service service = new Service(serviceName, price);
+        services.add(service);
+    }
+
+    // Сортировка номеров по цене
+    public List<HotelRoom> getSortedRoomsByPrice() {
+        List<HotelRoom> sortedRooms = new ArrayList<>(rooms);
+        Collections.sort(sortedRooms, Comparator.comparingDouble(HotelRoom::getPrice));
+        return sortedRooms;
+    }
+
+    // Сортировка номеров по вместимости
+    public List<HotelRoom> getSortedRoomsByCapacity() {
+        List<HotelRoom> sortedRooms = new ArrayList<>(rooms);
+        Collections.sort(sortedRooms, Comparator.comparingInt(HotelRoom::getCapacity));
+        return sortedRooms;
+    }
+
+    // Сортиовка номеров по количеству звезд
+    public List<HotelRoom> getSortedRoomsByStars() {
+        List<HotelRoom> sortedRooms = new ArrayList<>(rooms);
+        Collections.sort(sortedRooms, Comparator.comparingInt(HotelRoom::getStars));
+        return sortedRooms;
+    }
+
+    // Получить список доступных номеров (RoomStatus.FREE)
+    public List<HotelRoom> getFreeRooms() {
+        List<HotelRoom> freeRooms = new ArrayList<>();
+        for (HotelRoom room : rooms) {
+            if (room.getStatus() == RoomStatus.FREE) {
+                freeRooms.add(room);
+            }
+        }
+        return freeRooms;
+    }
+
+    // Сортировка гостей по алфавиту
+    public List<Guest> getSortedGuestsByAlphabet() {
+        List<Guest> sortedGuest = new ArrayList<>(guests);
+        Collections.sort(sortedGuest, Comparator.comparing(Guest::getName));
+        return sortedGuest;
+    }
+
+    // Общее число свободных номеров
+    public int getTotalFreeRooms() {
+        int count = 0;
+        for (HotelRoom room : rooms) {
+            if (room.getStatus() == RoomStatus.FREE) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Общее число постояльцев
+    public int getTotalGuests() {
+        return guests.size();
+    }
+
+    // доступные номера по дате
+    public List<HotelRoom> getFreeRoomsByDate(Date date) {
+        List<HotelRoom> freeRoom = new ArrayList<>();
+        for (HotelRoom room : rooms) {
+            if (room.getStatus() == RoomStatus.FREE && isRoomFreeOnDate(room.getRoomNumber(), date)) {
+                freeRoom.add(room);
+            }
+
+        }
+        return freeRoom;
+    }
+
+    // ------------------------------------------------------------------
     // Поиск комнаты
     private HotelRoom findRoomByNumber(int roomNumber) {
         for (HotelRoom room : rooms) {
@@ -141,5 +210,15 @@ class HotelAdministrator {
             }
         }
         return null;
+    }
+
+    // свободен ли номер по дате
+    private boolean isRoomFreeOnDate(int roomNumber, Date date) {
+        for (Guest guest : guests) {
+            if (guest.getRoomNumber() == roomNumber && !date.before(guest.getCheckInDate()) && !date.after(guest.getCheckOutDate())) {
+                return false;
+            }
+        }
+        return true;
     }
 }
