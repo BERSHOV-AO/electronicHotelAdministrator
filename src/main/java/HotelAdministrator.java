@@ -1,16 +1,20 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 class HotelAdministrator {
-    private List<Room> rooms;
+    private List<HotelRoom> rooms;
     private List<Service> services;
+
+    private List<Guest> guests;
 
     public HotelAdministrator() {
         rooms = new ArrayList<>();
         services = new ArrayList<>();
+        guests = new ArrayList<>();
     }
 
-    public void addRoom(Room room) {
+    public void addRoom(HotelRoom room) {
         rooms.add(room);
     }
 
@@ -18,31 +22,61 @@ class HotelAdministrator {
         services.add(service);
     }
 
-    // Поселить в номер
-    public void checkIn(int roomNumber) {
-        Room room = findRoom(roomNumber);
-        if (room != null && room.getStatus() == RoomStatus.FREE) {
+    public void addGuest(Guest guest) {
+        guests.add(guest);
+    }
+
+    // зарегистрировать гостя
+    public void checkInGuest(String guestName, int roomNumber, Date checkInDate, Date checkOutDate) {
+        Guest guest = new Guest(guestName, roomNumber, checkInDate, checkOutDate);
+        guests.add(guest);
+
+        HotelRoom room = findRoomByNumber(roomNumber);
+        if(room != null) {
             room.setStatus(RoomStatus.OCCUPIED);
-            System.out.println("Гость успешно заселился в комнату " + roomNumber);
-        } else {
-            System.out.println("Комната " + roomNumber + " недоступна для регистрации");
         }
     }
 
-    // Выселить из номера
-    public void checkOut(int roomNumber) {
-        Room room = findRoom(roomNumber);
-        if (room != null && room.getStatus() == RoomStatus.OCCUPIED) {
-            room.setStatus(RoomStatus.FREE);
-            System.out.println("Гость успешно выписался из комнаты " + roomNumber);
-        } else {
-            System.out.println("Комната " + roomNumber + " не занята");
+    // выезд гостя
+    public void checkOutGuest(int roomNumber) {
+        Guest guest = findGuestByRoomNumber(roomNumber);
+        if (guest != null) {
+            guests.remove(guest);
+
+            HotelRoom room = findRoomByNumber(roomNumber);
+            if (room != null) {
+                room.setStatus(RoomStatus.FREE);
+            }
         }
+
     }
+
+
+    // Поселить в номер
+//    public void checkIn(int roomNumber) {
+//        Room room = findRoom(roomNumber);
+//        if (room != null && room.getStatus() == RoomStatus.FREE) {
+//            room.setStatus(RoomStatus.OCCUPIED);
+//            System.out.println("Гость успешно заселился в комнату " + roomNumber);
+//        } else {
+//            System.out.println("Комната " + roomNumber + " недоступна для регистрации");
+//        }
+//    }
+
+    // Выселить из номера
+//    public void checkOut(int roomNumber) {
+//        Room room = findRoom(roomNumber);
+//        if (room != null && room.getStatus() == RoomStatus.OCCUPIED) {
+//            room.setStatus(RoomStatus.FREE);
+//            System.out.println("Гость успешно выписался из комнаты " + roomNumber);
+//        } else {
+//            System.out.println("Комната " + roomNumber + " не занята");
+//        }
+//    }
 
     // Изменить статус комнаты
     public void changeRoomStatus(int roomNumber, RoomStatus status) {
-        Room room = findRoom(roomNumber);
+        HotelRoom room = findRoomByNumber(roomNumber);
         if (room != null) {
             room.setStatus(status);
             System.out.println("У комнаты " + roomNumber + " статус изменен на " + status);
@@ -53,7 +87,7 @@ class HotelAdministrator {
 
     // Изменить цену номера
     public void changeRoomPrice(int roomNumber, double price) {
-        Room room = findRoom(roomNumber);
+        HotelRoom room = findRoomByNumber(roomNumber);
         if (room != null) {
             room.setPrice(price);
             System.out.println("У комнаты " + roomNumber + " цена изменена на " + price);
@@ -73,11 +107,27 @@ class HotelAdministrator {
         }
     }
 
+    public void addRoom(int roomNumber, int stars, double price, int capacity) {
+        HotelRoom room = new HotelRoom(roomNumber, stars, price, capacity);
+        rooms.add(room);
+
+    }
+
     // Поиск комнаты
-    private Room findRoom(int roomNumber) {
-        for (Room room : rooms) {
-            if (room.getNumber() == roomNumber) {
+    private HotelRoom findRoomByNumber(int roomNumber) {
+        for (HotelRoom room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
                 return room;
+            }
+        }
+        return null;
+    }
+
+    // Поиск гостя по номеру комнаты
+    private Guest findGuestByRoomNumber(int roomNumber) {
+        for (Guest guest : guests) {
+            if (guest.getRoomNumber() == roomNumber) {
+                return guest;
             }
         }
         return null;
