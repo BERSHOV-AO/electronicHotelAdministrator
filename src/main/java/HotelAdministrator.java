@@ -181,6 +181,60 @@ class HotelAdministrator {
         return freeRoom;
     }
 
+    // Сумма оплаты за номер которую должен оплатить постоялец
+    // При выселении с текущей даты, можно сделать при выселении с полной указанной датой!!!
+    public double getPayAmount(int roomNumber) {
+        double paymentAmount = 0.0;
+        Guest guest = findGuestByRoomNumber(roomNumber);
+        if (guest != null) {
+            Date currentDate = new Date();
+            long durationInMillis = currentDate.getTime() - guest.getCheckInDate().getTime();
+            int durationInDays = (int) (durationInMillis / (24 * 60 * 60 * 1000));
+            paymentAmount = durationInDays * findRoomByNumber(roomNumber).getPrice();
+        }
+        return paymentAmount;
+    }
+
+    // Посмотреть 3-х последних постояльцев номера и даты их пребывания
+    // получить последних трех гостей
+
+    //public List<Guest> getLastThreeGuests(int )
+
+
+    // Получить отсортированные услуги по цене
+    public List<Service> getSortedServicesByPrice() {
+        List<Service> sortedServices = new ArrayList<>(services);
+        Collections.sort(sortedServices, Comparator.comparingDouble(Service::getPrice));
+        return sortedServices;
+    }
+
+    // получить отсортированные услуги по дате
+    public List<Service> getSortedServicesByDate(int roomNumber) {
+        List<Service> sortedServices = new ArrayList<>();
+        Guest guest = findGuestByRoomNumber(roomNumber);
+        if (guest != null) {
+            for (Service service : services) {
+                if (service.getDate().after(guest.getCheckInDate())) {
+                    sortedServices.add(service);
+                }
+            }
+            Collections.sort(sortedServices, Comparator.comparing(Service::getDate));
+        }
+        return sortedServices;
+    }
+
+    // осмотреть детали отдельного номера
+    public void printRoomDetails(int roomNumber) {
+        HotelRoom room = findRoomByNumber(roomNumber);
+        if(room != null) {
+            System.out.println("Room Number: " + room.getRoomNumber());
+            System.out.println("Stars: " + room.getStars());
+            System.out.println("Price: " + room.getPrice());
+            System.out.println("Capacity: " + room.getCapacity());
+            System.out.println("Status: " + room.getStatus());
+        }
+    }
+
     // ------------------------------------------------------------------
     // Поиск комнаты
     private HotelRoom findRoomByNumber(int roomNumber) {

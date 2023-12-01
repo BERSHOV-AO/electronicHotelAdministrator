@@ -1,6 +1,10 @@
+import java.util.Date;
+
 class Service {
     private String name;
     private double price;
+
+    private Date date;
 
     public Service(String name, double price) {
         this.name = name;
@@ -17,5 +21,17 @@ class Service {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
